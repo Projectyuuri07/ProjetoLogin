@@ -1,37 +1,38 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import axios from "axios";
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Formulario from './formulario';
 
 function Editar({id}) {
+
     const [show, setShow] = useState(false);
+    const [funcionario, setFuncionario] = useState([]);
 
-    function excluirDados() {
-        fetch('https://apiaulas.thiagodev502.repl.co/funcionarios/' + id)
-        .then((resposta) => location.reload())
-        .catch(() => console.log("Erro ao excluir"))
-    }
+    useEffect(() => {
+        axios.get("https://apiaulas.thiagodev502.repl.co/funcionarios/" + id)
+        .then(response => {setFuncionario(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    })
 
-  return (
-      <div>
-          <span style={{cursor:"pointer"}} onClick={() => setShow(true)}>
-          <FaPencilAlt size={20} className='text-primary'/>
-
-          </span>
-
-          <Modal show={show} onHide={() => setShow(false)}>
-              <Modal.Header closeButton>
+    return (
+        <div>
+            <span style={{cursor: 'pointer'}} variant="danger" onClick={() => setShow(true)}>
+                <FaPencilAlt size={20} className='text-primary'/>
+            </span>
+            <Modal show={show} onHide={() => setShow(false)}>
+                <Modal.Header closeButton>
                     <h2>Editar</h2>
-              </Modal.Header>
-              <Modal.Body>
-                Oque deseja editar?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={excluirDados} variant="dander">Excluir</Button>
-              </Modal.Footer>
-          </Modal>
+                </Modal.Header>
+                <Modal.Body>
+                    <Formulario funcionario={funcionario} setShow={setShow}/>   
+                </Modal.Body>
+                <Modal.Footer>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }

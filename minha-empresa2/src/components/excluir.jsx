@@ -1,39 +1,40 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useState } from "react";
-import { FaTrashAlt } from "react-icons/fa";
-import axios from "axios";
-
-
+import { MdDeleteForever } from "react-icons/md";
+import { useState } from 'react';
+import axios from 'axios';
 function Excluir({id}) {
+
     const [show, setShow] = useState(false);
 
-    function excluirDados() {
-        fetch('https://apiaulas.thiagodev502.repl.co/funcionarios/' + id)
-        .then((resposta) => location.reload())
-        .catch(() => console.log("Erro ao excluir"))
+    function ExcluirDados(){
+        axios.delete(`https://apiaulas.thiagodev502.repl.co/funcionarios/${id}`)
+        .then(() => {
+            setShow(false);
+            location.reload();
+        }).catch((error) => {
+            console.log(error);
+        });
     }
-
-  return (
-      <div>
-          <span style={{cursor:"pointer"}} onClick={() => setShow(true)}>
-          <FaTrashAlt size={20} className='text-danger'/>
-
-          </span>
-
-          <Modal show={show} onHide={() => setShow(false)}>
-              <Modal.Header closeButton>
-                    <h2>Excluir</h2>
-              </Modal.Header>
-              <Modal.Body>
-                Deseja realmente excluir?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={excluirDados} variant="dander">Excluir</Button>
-              </Modal.Footer>
-          </Modal>
+    return (
+        <div>
+        <span style={{cursor: 'pointer'}} variant="danger" onClick={() => setShow(true)}>
+                <MdDeleteForever color='red' size={20} />
+        </span>
+        <Modal show={show} onHide={() => setShow(false)}>
+            <Modal.Header closeButton>
+                <h2>Excluir</h2>
+            </Modal.Header>
+            <Modal.Body>
+                <p>Deseja realmente Excluir?</p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="danger" onClick={ExcluirDados}>Sim</Button>
+            </Modal.Footer>
+            
+        </Modal>
         </div>
-    );
+    )
 }
 
 export default Excluir;
